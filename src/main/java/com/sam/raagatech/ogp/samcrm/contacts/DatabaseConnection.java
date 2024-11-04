@@ -29,29 +29,29 @@ abstract class DatabaseConnection {
     public final String dbPassword = "arjunarya";
     public final String dbUrl = "jdbc:mysql://" + hostName + "/" + dbName;
 
-//    protected final Connection createConnection() throws Exception {
-//        Properties info = new Properties();
-//        info.put(OracleConnection.CONNECTION_PROPERTY_USER_NAME, DB_USER);
-//        info.put(OracleConnection.CONNECTION_PROPERTY_PASSWORD, DB_PASSWORD);
-//        info.put(OracleConnection.CONNECTION_PROPERTY_DEFAULT_ROW_PREFETCH, "20");
-//
-//        var ods = new OracleDataSource();
-//        ods.setURL(DB_URL);
-//        ods.setConnectionProperties(info);
-//        Connection connection = ods.getConnection();
-//
-//        return connection;
-//    }
-    //mysql
-    public Connection createConnection() throws Exception {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-        } catch (SQLException e) {
-        }
+    protected final Connection createConnection() throws Exception {
+        Properties info = new Properties();
+        info.put(OracleConnection.CONNECTION_PROPERTY_USER_NAME, DB_USER);
+        info.put(OracleConnection.CONNECTION_PROPERTY_PASSWORD, DB_PASSWORD);
+        info.put(OracleConnection.CONNECTION_PROPERTY_DEFAULT_ROW_PREFETCH, "20");
+
+        var ods = new OracleDataSource();
+        ods.setURL(DB_URL);
+        ods.setConnectionProperties(info);
+        Connection connection = ods.getConnection();
 
         return connection;
     }
+    //mysql
+//    public Connection createConnection() throws Exception {
+//        Connection connection = null;
+//        try {
+//            connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+//        } catch (SQLException e) {
+//        }
+//
+//        return connection;
+//    }
 
     protected final int generateNextPrimaryKey(String tableName, String columnName) throws Exception {
 

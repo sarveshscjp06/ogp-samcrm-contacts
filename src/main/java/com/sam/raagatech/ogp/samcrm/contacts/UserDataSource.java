@@ -261,24 +261,26 @@ public class UserDataSource extends DatabaseConnection implements UserDataInterf
             statement = connection.createStatement();
             String queryCheckLogin = "SELECT si.individual_id, si.name, si.mobile, si.email, si.zipcode, si.profile_pic, si.profile_color, si.password, si.address, "
                     + "su.is_loggedin, su.is_vendor, svcs.vendor_category_id, svcs.vendor_subtype_id, svcs.vendor_registration_no, svcs.description, "
-                    + "svcs.vendor_title, svcs.push_message, svcs.email_campaign_text, svcs.bulk_sms_text, svcs.id, "
-                    + "soo.order_id, count(item_id) as cart_count "
+                    + "svcs.vendor_title, svcs.push_message, svcs.email_campaign_text, svcs.bulk_sms_text, svcs.id "
+                    //+ ", soo.order_id, count(item_id) as cart_count "
                     + "from samcrm_individual si inner join samcrm_users su on su.mobile = si.mobile ";
 
-            if (individualId != null && !individualId.isEmpty()) {
-                queryCheckLogin = queryCheckLogin + " and si.individual_id = " + individualId;
-            } else {
-                queryCheckLogin = queryCheckLogin + " and su.mobile = " + mobileNo;
-            }
+//            if (individualId != null && !individualId.isEmpty()) {
+//                queryCheckLogin = queryCheckLogin + " and si.individual_id = " + individualId;
+//            } else {
+//                queryCheckLogin = queryCheckLogin + " and su.mobile = " + mobileNo;
+//            }
 
             queryCheckLogin = queryCheckLogin + " left join samcrm_vendor_category_subtype svcs on svcs.mobile = si.mobile "
-                    + "left join samcrm_obm_orders soo on soo.status = 'open' AND soo.customer_id = si.individual_id "
-                    + "left join samcrm_obm_items soi on soi.order_id = soo.order_id where " //"su.ip_address = '" + ipAddress + "' and "
-                    + "su.is_loggedin = 1 ";
-            if (mobileNo != null && !mobileNo.isEmpty()) {
+                    //+ "left join samcrm_obm_orders soo on soo.status = 'open' AND soo.customer_id = si.individual_id "
+                    //+ "left join samcrm_obm_items soi on soi.order_id = soo.order_id where "
+                    + " where su.is_loggedin = 1 "; //" and su.ip_address = '" + ipAddress + "' "
+            if (individualId != null && !individualId.isEmpty()) {
+                queryCheckLogin = queryCheckLogin + " and si.individual_id = " + individualId;
+            } else if (mobileNo != null && !mobileNo.isEmpty()) {
                 queryCheckLogin = queryCheckLogin + " and su.mobile = " + mobileNo;
             }
-            queryCheckLogin = queryCheckLogin + " group by si.mobile, su.is_vendor, svcs.vendor_category_id, svcs.vendor_subtype_id, svcs.vendor_registration_no, soo.order_id";
+            //queryCheckLogin = queryCheckLogin + " group by si.mobile, su.is_vendor, svcs.vendor_category_id, svcs.vendor_subtype_id, svcs.vendor_registration_no, soo.order_id";
             try ( ResultSet result = statement.executeQuery(queryCheckLogin)) {
                 while (result.next()) {
                     individualData.put("individual_id", result.getString("individual_id"));
@@ -302,7 +304,7 @@ public class UserDataSource extends DatabaseConnection implements UserDataInterf
                     individualData.put("vendorCategoryId", result.getString("vendor_category_id"));
                     individualData.put("vendorSubtypeId", result.getString("vendor_subtype_id"));
                     individualData.put("vendor_group_id", result.getString("id"));
-                    individualData.put("order_id", result.getString("order_id"));
+//                    individualData.put("order_id", result.getString("order_id"));
                     break;
                 }
             }
